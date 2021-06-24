@@ -1,2 +1,2 @@
 # Metaheuristics
-Genetic algorithm and grey wolf optimization
+Grey Wolf Optimization, Simulated Annealing, and Genetic Algorithm
