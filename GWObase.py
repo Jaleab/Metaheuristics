@@ -181,6 +181,6 @@ print("\nGWO completed\n")
 print("\nBest solution found:")
 print(["%.6f"%best_position[k] for k in range(dim)])
 err = fitness(best_position)
-print("fitness of best solution = %.6f" % err)
+print("Fitness of best solution = %.6f" % err)
  
 print("\nEnd GWO for sphere\n")
