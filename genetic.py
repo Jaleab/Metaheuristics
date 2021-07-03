@@ -30,7 +30,7 @@ def calculate_fitness(matrix, input):
         fitness_array[i] = (pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2))
 
     index = [x for _,x in sorted(zip(fitness_array,index))]
-
+    fitness_array.sort()
     return fitness_array, index
 
 def create_matrix(population):
@@ -44,17 +44,18 @@ def create_matrix(population):
 
 def parent(amount):
     pivot = random.random()
-    if pivot <= 0.1:
+    if pivot <= 0.6:
         start = 0
-        end = int(0.1 * amount)
-    elif pivot <=0.3:
-        start = int(0.1 * amount)
-        end = int(0.3 * amount)
+        end = int(0.6 * amount)
+    elif pivot <=0.9:
+        start = int(0.6 * amount)
+        end = int(0.9 * amount)
     else:
-        start = int(0.3 * amount)
+        start = int(0.9 * amount)
         end = amount
     return random.randint(start,end) 
-# The distribution is based on results : 10% bad, 20% mediumm, 60% good
+
+# The distribution is based on results : 10% bad, 30% mediumm, 60% good
 def crossover(index, genomes, new_genomes):
     
     # print()
@@ -68,14 +69,14 @@ def crossover(index, genomes, new_genomes):
     start = random.randint(0,4999)
     end = random.randint(5000,9999)
 
-    parent_1 = genomes[genome_index_1]
-    parent_2 = genomes[genome_index_2]
+    parent_1 = genomes[genome_index_1].copy()
+    parent_2 = genomes[genome_index_2].copy()
 
     # genomes.pop(index_del_1)
     # genomes.pop(index_del_2)
 
-    offspring_1 = parent_1[:start] +parent_2[start:end]+ parent_1[end:]
-    offspring_2 = parent_2[:start] +parent_1[start:end]+ parent_2[end:]
+    offspring_1 = parent_1[:start].copy() +parent_2[start:end].copy()+ parent_1[end:].copy()
+    offspring_2 = parent_2[:start].copy() +parent_1[start:end].copy()+ parent_2[end:].copy()
 
     new_genomes.append(offspring_1)
     new_genomes.append(offspring_2)
@@ -93,9 +94,13 @@ def mutation(genomes):
 def individual_fitness(genomes, input ):
     sum_subsets = [0, 0, 0]
     row_amount = len(genomes)
+    amount_1 = 0
     for j in range(row_amount):
         sum_subsets[genomes[j]] += input[j]
-    return sum_subsets
+    # print(amount_1)
+    # print(sum_subsets[0])
+    result = (pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2))
+    return sum_subsets, result
 
 def main():
     input = read_input()
@@ -118,28 +123,34 @@ def main():
         save_index = index.copy()
         new_genomes = []
         genomes_iterations = math.floor(population // 2)
+        #Crossover over all genomes
         for i in range(genomes_iterations):
             index, genomes, new_genomes = crossover(index, genomes, new_genomes)
         genomes = new_genomes.copy()
+        #Mutation over all genomes
         mutation(genomes)
         count_10 += 1
         if count_10 == 10:
-            fitness_log.append(unsort_result[save_index[population -1]])
-            genome_log.append(genomes[save_index[population -1]])
+            # print()
+            # print (save_index)
+            # print (unsort_result)
+            fitness_log.append(unsort_result[0])
+            genome_log.append(genomes[save_index[0]])
             count_10 = 0 
               
     finish_time = datetime.now()
     elapsed = finish_time - start_time
 
     print("Elapsed time :",  elapsed.total_seconds())
-    print ("Best fitness :", unsort_result[save_index[population -1]])
+    print ("Best fitness :", unsort_result[save_index[0]])
     print("Population size :", population)
     print("Number of iterations :", iterations)
 
     for i in range(len(fitness_log)):
-        subset_sum = individual_fitness(genome_log[i], input)
+        subset_sum, result = individual_fitness(genome_log[i], input)
         print()
-        print("Fitness at ",(i+1)*10,"th iteration :", fitness_log[i])
+        # print("Fitness at ",(i+1)*10,"th iteration :", fitness_log[i])
+        print("Fitness at ",(i+1)*10,"th iteration :", result)
         print("Individuals sums")
         print("\tS1 ", subset_sum[0])
         print("\tS2 ", subset_sum[1])
@@ -148,5 +159,10 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
- 
+
+191028632835689547
+4901153091454338.0
+1261490647611408
+663675158969931
+5594060947456818
+81733985910441
