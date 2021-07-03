@@ -26,8 +26,7 @@ def calculate_fitness(matrix, input):
         index[i] = i
         for j in range(len(matrix[0])):
             sum_subsets[matrix[i][j]] += input[j]
-
-        # result = (pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2))
+            # sum_subsets[matrix[i][j]] += random.randint(0,10)
         fitness_array[i] = (pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2))
 
     index = [x for _,x in sorted(zip(fitness_array,index))]
@@ -43,23 +42,27 @@ def create_matrix(population):
         matrix.append(a)
     return matrix
 
-    # for i in range(len(index)):
-    #     pivot = random.random()
-    #     if pivot <= 0.1:
-    #         print("Bad")
-    #     elif pivot <=0.3:
-    #         print("Mdium")
-    #     else:
-    #         print("Good")
+def parent(amount):
+    pivot = random.random()
+    if pivot <= 0.1:
+        start = 0
+        end = int(0.1 * amount)
+    elif pivot <=0.3:
+        start = int(0.1 * amount)
+        end = int(0.3 * amount)
+    else:
+        start = int(0.3 * amount)
+        end = amount
+    return random.randint(start,end) 
 # The distribution is based on results : 10% bad, 20% mediumm, 60% good
 def crossover(index, genomes, new_genomes):
     
     # print()
     
-    index_del_1 = int(random.random() * len(index))
+    index_del_1 = parent(len(index)-1)
     genome_index_1 = index.pop(index_del_1)
 
-    index_del_2 = int(random.random() * len(index))
+    index_del_2 = parent(len(index)-1)
     genome_index_2 = index.pop(index_del_2)
 
     start = random.randint(0,4999)
@@ -87,15 +90,27 @@ def mutation(genomes):
         change = (genomes[i][position] + pivot) % 3
         genomes[i][position] = change
 
+def individual_fitness(genomes, input ):
+    sum_subsets = [0, 0, 0]
+    row_amount = len(genomes)
+    for j in range(row_amount):
+        sum_subsets[genomes[j]] += input[j]
+    return sum_subsets
+
 def main():
     input = read_input()
 
-    population = 60
+    population = 20
     iterations = 40
 
     genomes = create_matrix(population)
     unsort_result = []
     index = []
+
+    fitness_log = []
+    genome_log = []
+
+    count_10 = 0
     #Sorted ascending way index[0] = lower, index[n] = upper
     start_time = datetime.now()
     for l in range (iterations):
@@ -106,31 +121,32 @@ def main():
         for i in range(genomes_iterations):
             index, genomes, new_genomes = crossover(index, genomes, new_genomes)
         genomes = new_genomes.copy()
-
         mutation(genomes)
+        count_10 += 1
+        if count_10 == 10:
+            fitness_log.append(unsort_result[save_index[population -1]])
+            genome_log.append(genomes[save_index[population -1]])
+            count_10 = 0 
+              
     finish_time = datetime.now()
     elapsed = finish_time - start_time
 
     print("Elapsed time :",  elapsed.total_seconds())
-    print ("Better fitness :", unsort_result[save_index[9]])
-    # print (genomes[save_index[9]])
+    print ("Best fitness :", unsort_result[save_index[population -1]])
     print("Population size :", population)
     print("Number of iterations :", iterations)
+
+    for i in range(len(fitness_log)):
+        subset_sum = individual_fitness(genome_log[i], input)
+        print()
+        print("Fitness at ",(i+1)*10,"th iteration :", fitness_log[i])
+        print("Individuals sums")
+        print("\tS1 ", subset_sum[0])
+        print("\tS2 ", subset_sum[1])
+        print("\tS3 ", subset_sum[2])
+
+
 if __name__ == "__main__":
     main()
  
-# population_size = 5
-# max_iter = 10
  
-# print("Setting population size = " + str(population_size))
-# print("Setting max_iter = " + str(max_iter))
-# print("\nStarting Genetic algorithm\n")
-
-# best_fitness, best_subset = genetic(max_iter, population_size, 1000000, -1000000, quantity_subsets)
- 
-# print("Genetic algorithm completed\n")
-# print("\nBest solution found:")
-# print("Subsets of the solution", best_subset)
-# print("fitness of best solution =", best_fitness)
- 
-
