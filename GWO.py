@@ -148,40 +148,42 @@ def gwo(fitness, max_iter, population_size, quantity_subsets, maxx, minx):
 
 read_input()
 
-print("\nBegin grey wolf optimization on sum of squares function\n")
-fitness = fitness_sum_squares 
- 
-print("Goal is to minimize sum of squares's function")
- 
-population_size = 60
-max_iter = 40
- 
-print("Setting population size = " + str(population_size))
-print("Setting max_iter = " + str(max_iter))
-print("\nStarting GWO algorithm\n")
- 
- 
- 
-#best_position = gwo(fitness, max_iter, num_particles, dim, -10.0, 10.0)
-# def gwo(fitness, max_iter, population_size, quantity_subsets, maxx, minx):
-t0 = time.time()
-best_fitness, best_subset, number_of_solutions = gwo(fitness, max_iter, population_size, quantity_subsets, 4994213664, 1664737888)
-t1 = time.time()
-total_time = t1-t0
- 
-print("\nGWO completed\n")
-print("\nBest solution found:")
-print("Subsets of the solution", best_subset)
-print("fitness of best solution =", best_fitness)
-sum_subsets = [0,0,0]
-for i in range(len(best_subset)): 
-        for number in best_subset[i]:
-            sum_subsets[i] += input_numbers[number]
-      
-print("Subsets sums: ", sum_subsets)
-print("Execution time: ", total_time)
-print("Explored solutions: ", number_of_solutions) 
-print("\nEnd GWO for sub of squares\n")
+repetitions = 5
+for i in range(repetitions):
+    print("\nBegin grey wolf optimization on sum of squares function\n")
+    fitness = fitness_sum_squares 
+    
+    print("Goal is to minimize sum of squares's function")
+    
+    population_size = 100
+    max_iter = 50
+
+    print("Setting population size = " + str(population_size))
+    print("Setting max_iter = " + str(max_iter))
+    print("\nStarting GWO algorithm\n")
+    
+    
+    
+    #best_position = gwo(fitness, max_iter, num_particles, dim, -10.0, 10.0)
+    # def gwo(fitness, max_iter, population_size, quantity_subsets, maxx, minx):
+    t0 = time.time()
+    best_fitness, best_subset, number_of_solutions = gwo(fitness, max_iter, population_size, quantity_subsets, 4994213664, 1664737888)
+    t1 = time.time()
+    total_time = t1-t0
+    
+    print("\nGWO completed\n")
+    print("\nBest solution found:")
+    print("Subsets of the solution", best_subset)
+    print("Fitness of best solution =", best_fitness)
+    sum_subsets = [0,0,0]
+    for i in range(len(best_subset)): 
+            for number in best_subset[i]:
+                sum_subsets[i] += input_numbers[number]
+          
+    print("Subsets sums: ", sum_subsets)
+    print("Execution time: ", total_time)
+    print("Explored solutions: ", number_of_solutions) 
+    print("\nEnd GWO for sub of squares\n")
 
 # Ejecucion 1
 """
