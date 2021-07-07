@@ -1,0 +1,54 @@
+Ejecucion #1
+Fitness at  10 th iteration : 9744165392890518
+Fitness at  20 th iteration : 18046132172606826
+Fitness at  30 th iteration : 9219680090770434
+Fitness at  40 th iteration : 7097350555253088
+Fitness at  50 th iteration : 2257891605544974
+
+Fitness of best solution: 304550100738
+Subsets sums: [1664989494, 1664669349, 1664554821]
+Explored solutions:  5000
+
+Ejecucion #2
+Fitness at  10 th iteration : 12659714641680000
+Fitness at  20 th iteration : 5802082432055154
+Fitness at  30 th iteration : 3160635656110422
+Fitness at  40 th iteration : 5624067333299226
+Fitness at  50 th iteration : 7736838480616434
+
+Fitness of best solution: 2225229302058
+Subsets sums: [1664398797, 1665440945, 1664373922]
+Explored solutions:  5000
+
+Ejecucion #3
+Fitness at  10 th iteration : 2551655880735558
+Fitness at  20 th iteration : 181927505887704
+Fitness at  30 th iteration : 6988400205574578
+Fitness at  40 th iteration : 2518112572938438
+Fitness at  50 th iteration : 20114569109553624
+
+Fitness of best solution: 1116830375808
+Subsets sums: [1664943432, 1664242112, 1665028120]
+Explored solutions:  5000
+
+Ejecucion #4
+Fitness at  10 th iteration : 8483448879264906
+Fitness at  20 th iteration : 9896517659649282
+Fitness at  30 th iteration : 304756893866358
+Fitness at  40 th iteration : 873682600839072
+Fitness at  50 th iteration : 44486805016088214
+
+Fitness of best solution: 181009871826
+Subsets sums: [1664545067, 1664882083, 1664786514]
+Explored solutions:  5000
+
+Ejecucion #5
+Fitness at  10 th iteration : 7578070534669842
+Fitness at  20 th iteration : 5215712044708896
+Fitness at  30 th iteration : 11848573976257950
+Fitness at  40 th iteration : 1578525348691608
+Fitness at  50 th iteration : 563582872765842
+
+Fitness of best solution: 537853610616
+Subsets sums: [1665045122, 1664721558, 1664446984]
+Explored solutions:  5000
