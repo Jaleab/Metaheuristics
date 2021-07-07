@@ -4,6 +4,7 @@ import copy    # array-copying convenience
 import sys     # max float
 from datetime import datetime
 
+
 total_numbers = 10000
 quantity_subsets = 3
 
@@ -17,22 +18,28 @@ def read_input():
     return input_numbers
 
 # Suma de cuadrados de sus diferencias: f(s1, s2, s3) = (s1 - s2)^2 + (s1 - s3)^2 + (s2 - s3)^2.
-def calculate_fitness(matrix, input):
-    sum_subsets = [0, 0, 0]
+def calculate_fitness(matrix, input, min_fitness, min_array):
     row_amount = len(matrix)
     fitness_array = [0] * row_amount
     index = [0] * row_amount
     for i in range(len(matrix)):
+        sum_subsets = [0, 0, 0]
         index[i] = i
         for j in range(len(matrix[0])):
             sum_subsets[matrix[i][j]] += input[j]
             # sum_subsets[matrix[i][j]] += random.randint(0,10)
+        sum = 0
+        sum = sum_subsets[0] + sum_subsets[1] + sum_subsets[2]
+        if sum != 4994213664:
+            print("ERROR")
         fitness_array[i] =pow((sum_subsets[0]-sum_subsets[1]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2)
-        # fitness_array[i] = (pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2))
+        if fitness_array[i] < min_fitness :
+            min_fitness= fitness_array[i]
+            min_array = sum_subsets.copy()
 
     index = [x for _,x in sorted(zip(fitness_array,index))]
     fitness_array.sort()
-    return fitness_array, index
+    return fitness_array, index, min_fitness, min_array
 
 def create_matrix(population):
     matrix = []
@@ -73,9 +80,6 @@ def crossover(index, genomes, new_genomes):
     parent_1 = genomes[genome_index_1].copy()
     parent_2 = genomes[genome_index_2].copy()
 
-    # genomes.pop(index_del_1)
-    # genomes.pop(index_del_2)
-
     offspring_1 = parent_1[:start].copy() +parent_2[start:end].copy()+ parent_1[end:].copy()
     offspring_2 = parent_2[:start].copy() +parent_1[start:end].copy()+ parent_2[end:].copy()
 
@@ -98,8 +102,6 @@ def individual_fitness(genomes, input ):
     amount_1 = 0
     for j in range(row_amount):
         sum_subsets[genomes[j]] += input[j]
-    # print(amount_1)
-    # print(sum_subsets[0])
     result =pow((sum_subsets[0]-sum_subsets[1]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2)
     return sum_subsets, result
 
@@ -107,9 +109,10 @@ def main():
     input = read_input()
 
     population = 100
-    iterations = 10000
+    iterations = 50
 
     genomes = create_matrix(population)
+    
     unsort_result = []
     index = []
 
@@ -119,8 +122,10 @@ def main():
     count_10 = 0
     #Sorted ascending way index[0] = lower, index[n] = upper
     start_time = datetime.now()
+    min_fitness = sys.maxsize
+    min_array = []
     for l in range (iterations):
-        unsort_result, index = calculate_fitness(genomes, input)
+        unsort_result, index, min_fitness, min_array = calculate_fitness(genomes, input, min_fitness, min_array)
         save_index = index.copy()
         new_genomes = []
         genomes_iterations = math.floor(population // 2)
@@ -128,13 +133,11 @@ def main():
         for i in range(genomes_iterations):
             index, genomes, new_genomes = crossover(index, genomes, new_genomes)
         genomes = new_genomes.copy()
+
         #Mutation over all genomes
         mutation(genomes)
         count_10 += 1
         if count_10 == 10:
-            # print()
-            # print (save_index)
-            # print (unsort_result)
             fitness_log.append(unsort_result[0])
             genome_log.append(genomes[save_index[0]])
             count_10 = 0 
@@ -142,22 +145,22 @@ def main():
     finish_time = datetime.now()
     elapsed = finish_time - start_time
 
-    print("Elapsed time :",  elapsed.total_seconds())
-    print ("Best fitness :", unsort_result[save_index[0]])
-    print("Population size :", population)
-    print("Number of iterations :", iterations)
 
     for i in range(len(fitness_log)):
         subset_sum, result = individual_fitness(genome_log[i], input)
-        print()
+        # print()
         # print("Fitness at ",(i+1)*10,"th iteration :", fitness_log[i])
         print("Fitness at ",(i+1)*10,"th iteration :", result)
-        print("Individuals sums")
-        print("\tS1 ", subset_sum[0])
-        print("\tS2 ", subset_sum[1])
-        print("\tS3 ", subset_sum[2])
-
+        # print("Individuals sums")
+        # print(subset_sum)
+        # print("\tS1 ", subset_sum[0])
+        # print("\tS2 ", subset_sum[1])
+        # print("\tS3 ", subset_sum[2])
+    print()
+    # print("Elapsed time :",  elapsed.total_seconds())
+    print ("Fitness of best solution:", min_fitness)
+    print("Subsets sums:", min_array)
+    print("Explored solutions: ", population * iterations)
 
 if __name__ == "__main__":
     main()
-
