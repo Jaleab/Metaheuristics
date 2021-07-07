@@ -27,7 +27,8 @@ def calculate_fitness(matrix, input):
         for j in range(len(matrix[0])):
             sum_subsets[matrix[i][j]] += input[j]
             # sum_subsets[matrix[i][j]] += random.randint(0,10)
-        fitness_array[i] = (pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2))
+        fitness_array[i] =pow((sum_subsets[0]-sum_subsets[1]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2)
+        # fitness_array[i] = (pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2))
 
     index = [x for _,x in sorted(zip(fitness_array,index))]
     fitness_array.sort()
@@ -46,12 +47,12 @@ def parent(amount):
     pivot = random.random()
     if pivot <= 0.6:
         start = 0
-        end = int(0.6 * amount)
+        end = int(0.1 * amount)
     elif pivot <=0.9:
-        start = int(0.6 * amount)
-        end = int(0.9 * amount)
+        start = int(0.1 * amount)
+        end = int(0.5 * amount)
     else:
-        start = int(0.9 * amount)
+        start = int(0.5 * amount)
         end = amount
     return random.randint(start,end) 
 
@@ -99,14 +100,14 @@ def individual_fitness(genomes, input ):
         sum_subsets[genomes[j]] += input[j]
     # print(amount_1)
     # print(sum_subsets[0])
-    result = (pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2))
+    result =pow((sum_subsets[0]-sum_subsets[1]), 2) + pow((sum_subsets[0]-sum_subsets[2]), 2) + pow((sum_subsets[1]-sum_subsets[2]), 2)
     return sum_subsets, result
 
 def main():
     input = read_input()
 
-    population = 20
-    iterations = 40
+    population = 100
+    iterations = 10000
 
     genomes = create_matrix(population)
     unsort_result = []
@@ -160,9 +161,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-191028632835689547
-4901153091454338.0
-1261490647611408
-663675158969931
-5594060947456818
-81733985910441
