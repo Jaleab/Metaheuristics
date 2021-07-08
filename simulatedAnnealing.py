@@ -42,8 +42,8 @@ def objective(num_list):
 			s2 += i[0]
 		if i[1] == 3:
 			s3 += i[0]
-
-	return (s1 - s2)**2 + (s1 - s3)**2 + (s2 - s3)**2
+	fitness = (s1 - s2)**2 + (s1 - s3)**2 + (s2 - s3)**2
+	return [fitness, [s1,s2,s3]]
 
 # simulated annealing algorithm
 def simulated_annealing(nums, n_iterations, temp):
@@ -56,9 +56,9 @@ def simulated_annealing(nums, n_iterations, temp):
 		nums_groups.append([n,0])
 	# genera una solucion inicial y la evalua
 	best = randomize_list (nums_groups, range(len(nums_groups)))
-	best_eval = objective(best)
+	best_eval, best_sums = objective(best)
 	# solucion actual
-	curr, curr_eval = best, best_eval
+	curr, curr_eval, curr_sums = best, best_eval, best_sums
 
 	for i in range(n_iterations):
 		# genera otra solucion vecina
@@ -69,35 +69,36 @@ def simulated_annealing(nums, n_iterations, temp):
 		candidate = randomize_list(curr, numbers_change)
 		
 		# evalua solucion vecina
-		candidate_eval = objective(candidate)
+		candidate_eval, candidate_sums = objective(candidate)
 		if candidate_eval < best_eval:
-			best, best_eval = candidate, candidate_eval
+			best, best_eval, best_sums = candidate, candidate_eval, candidate_sums
 			# imprime progreso
-			print('> iter %d: fitness %.5f' % (i, best_eval))
+			print('Fitness at', i,'th iteration:', best_eval)
 		diff = candidate_eval - curr_eval
 		# calcula la temperatura actual
 		t = temp / float(i + 1)
 		# calcula el valor metropolis y decide si aceptar el nuevo punto
 		metropolis = exp(-diff / t)
 		if diff < 0 or rand() < metropolis:
-			curr, curr_eval = candidate, candidate_eval
+			curr, curr_eval, curr_sums = candidate, candidate_eval, candidate_sums
 
 	elapsed_time = time.time() - start_time
-	return [best, best_eval, elapsed_time]
+	return [best, best_eval, best_sums, elapsed_time]
 
 
 def main():
 
 	#lee de input.txt
 	nums = read_input()
-	n_iterations = 100000
+	n_iterations = 5000
 	temp = 100
 	# Hace el Simulated Annealing con los numeros nums
-	best, score, elapsed_time = simulated_annealing(nums, n_iterations, temp)
+	best, score, sums, elapsed_time = simulated_annealing(nums, n_iterations, temp)
 	print('----------')
-	print('Elapsed time: ', elapsed_time)
-	print('Best fitness: ', score)
-	print('Number of iterations: ', n_iterations)
+	print('Elapsed time: ', elapsed_time,'s')
+	print('Fitness of best solution: ', score)
+	print('Subsets sums:  ', sums)
+	print('Explored solutions: ', n_iterations)
 
 if __name__ == "__main__":
 	main()
